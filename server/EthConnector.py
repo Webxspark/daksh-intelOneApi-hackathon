@@ -87,25 +87,6 @@ contract_abi =[
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "un",
-          "type": "uint256"
-        }
-      ],
-      "name": "getSOSNum",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "isWhiteListed",
       "outputs": [
@@ -135,24 +116,6 @@ contract_abi =[
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "un",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "sn",
-          "type": "uint256"
-        }
-      ],
-      "name": "setSOSNum",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
           "name": "id",
           "type": "uint256"
         },
@@ -170,7 +133,7 @@ contract_abi =[
   ]
 
 contract = w3.eth.contract(address=contract_address, abi=contract_abi)
-sender_address = Web3.to_checksum_address("0x8453ada3A9E671E0f115B2f2A2939b03aD519615")
+sender_address = Web3.to_checksum_address("0x0d2841D779908A6994744995FaD143e6fa93EbCc")
 w3.eth.defaultAccount = sender_address
 nonce = w3.eth.get_transaction_count(sender_address)
 data = contract.functions.getOperations().build_transaction({
@@ -182,7 +145,7 @@ signed_txn = w3.eth.account.sign_transaction(data, private_key=getPrivateKey())
 tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
 tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
-print(" ===================== MallEZ Admin Terminal ========================")
+print(" ===================== EmergAI Admin Terminal ========================")
 while True:
    print("Available Commands:")
    print("1 => addToWhiteList(address) : Adds address to whiteList, Requires Address ")
@@ -190,61 +153,44 @@ while True:
    print("3 => delReq(address) : Deletes a request from return value, only use if request causes problem in code ")
    
    x = int(input("Enter your choice (integer 1-3) : "))
+   # For addToWhitelist function
    if (x == 1):
-      s = input("Enter Address : ");
-      try: 
-         transaction = contract.functions.addToWhitelist(s).build_transaction({
-             'gas': 2000000,
-             'gasPrice': w3.to_wei('50', 'gwei'),
-             'nonce': w3.eth.get_transaction_count(sender_address),
-         })
+    s = input("Enter Address : ");
+    try: 
+        nonce = w3.eth.get_transaction_count(sender_address)  # Get a fresh nonce
+        transaction = contract.functions.addToWhitelist(s).build_transaction({
+            'gas': 2000000,
+            'gasPrice': w3.to_wei('50', 'gwei'),
+            'nonce': nonce,
+        })
+    except:
+        print("Error in adding to whiteList")
+        continue
 
-         # Sign and send the transaction
-         signed_txn = w3.eth.account.sign_transaction(transaction, private_key=getPrivateKey())
-         tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
-
-         print(tx_hash)
-         print("Transaction Completed Successfully.")
-         print("\n")
-      except:
-         print("Transaction Failed!")
-         print("\n")
-
+# For removeFromWhitelist function
    elif (x == 2):
-      s = input("Enter Address : ")
-      try: 
-         transaction = contract.functions.removeFromWhitelist(s).build_transaction({
-             'gas': 2000000,
-             'gasPrice': w3.to_wei('50', 'gwei'),
-             'nonce': w3.eth.get_transaction_count(sender_address),
-         })
+    s = input("Enter Address : ")
+    try: 
+        nonce = w3.eth.get_transaction_count(sender_address)  # Get a fresh nonce
+        transaction = contract.functions.removeFromWhitelist(s).build_transaction({
+            'gas': 2000000,
+            'gasPrice': w3.to_wei('50', 'gwei'),
+            'nonce': nonce,
+        })
+    except:
+      print("Error in adding to whiteList")
+      continue
 
-         # Sign and send the transaction
-         signed_txn = w3.eth.account.sign_transaction(transaction, private_key=getPrivateKey())
-         tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
-
-         print(tx_hash)
-         print("Transaction Completed Successfully.")
-         print("\n")
-      except:
-         print("Transaction Failed!")
-         print("\n")
+# For delReq function
    elif (x == 3):
-      try: 
+     try: 
         s = int(input("Enter ID : "))
+        nonce = w3.eth.get_transaction_count(sender_address)  # Get a fresh nonce
         transaction = contract.functions.delReq(s).build_transaction({
             'gas': 2000000,
             'gasPrice': w3.to_wei('50', 'gwei'),
-            'nonce': w3.eth.get_transaction_count(sender_address),
+            'nonce': nonce,
         })
-        # Sign and send the transaction
-        signed_txn = w3.eth.account.sign_transaction(transaction, private_key=getPrivateKey())
-        tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
-        print(tx_hash)
-        print("Transaction Completed Successfully.")
-        print("\n")
-      except:
-         print("Transaction Failed!")
-         print("\n")
-
-         
+     except:
+        print("Error in adding to whiteList")
+        continue

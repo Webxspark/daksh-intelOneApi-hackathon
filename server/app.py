@@ -96,7 +96,7 @@ def handle_recording():
 
       resp = send_req(transcribed_text=transcription_text)
       #   summary = transcription_text[:150] + "..."
-      print("Got response from OpenAI")
+      print("Got response from Neural Chat")
       msg = ""
       try:
         print("Debug:: TRY")
